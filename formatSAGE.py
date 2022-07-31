@@ -42,6 +42,10 @@ import plotly.graph_objects as go
 from sklearn.model_selection import StratifiedKFold
 from transformers import AutoTokenizer, AutoModel
 from random import randint
+from sentence_transformers import SentenceTransformer
+
+coder_model = AutoModel.from_pretrained('GanjinZero/UMLSBert_ENG')
+coder_tokenizer = AutoTokenizer.from_pretrained('GanjinZero/UMLSBert_ENG')
 
 from segmentation_models_pytorch.losses import FocalLoss
 
@@ -51,8 +55,8 @@ torch.cuda.empty_cache()
 
 mylogs = logging.getLogger(__name__)
 
-num_of_neg_samples= 1882
-num_of_pos_samples= 1882
+num_of_neg_samples= 20
+num_of_pos_samples= 20
 
 seed = 10
 data = None
@@ -170,7 +174,11 @@ def getData():
     df_drug =  conn.fetch_data(drug_query)
 
     return df_lab, df_drug, df_admission, df_diagnosis
-    
+
+def sentence_emd(sent):
+    inputs = coder_tokenizer(sent,padding=True, truncation=True, max_length = 200, return_tensors='pt')
+    sent_embed = np.mean(coder_model(**inputs).last_hidden_state[0].detach().numpy(), axis=0)
+    return sent_embed
 
 
 def map_edge_list(lst1):
@@ -237,6 +245,11 @@ def test(model,optimizer,criterion,mask,data):
       correct = pred[mask] == data['Admission'].y[mask]  # Check against ground-truth labels.
       acc = int(correct.sum()) / int(mask.sum())  # Derive ratio of correct predictions.
       return acc,pred
+
+def expandEmbeddings(df):
+    df2 = pd.DataFrame(df['Embeddings'].tolist())
+    return df2
+
 #@profile
 def main():
     model = None
@@ -295,6 +308,14 @@ def main():
 
         df_drugs['drug_name']  = label_encoder.fit_transform(df_drugs['drug_name'])
 
+        
+
+        df_diagnosis['Embeddings'] = df_diagnosis['title'].apply(lambda x:  np.array(sentence_emd(x)))
+        df_diagnosis_features = expandEmbeddings(df_diagnosis)
+        #df_diagnosis['Embeddings'] = torch.from_numpy(np.array(df_diagnosis['Embeddings']))
+        #print(df_diagnosis)
+        #df_diagnosis.to_csv('diagnosis.csv')
+
 
 
         df_labs['weight']= np.where(df_labs['label']<1, 1, 4)
@@ -340,12 +361,11 @@ def main():
             data['Drugs'].x = torch.tensor(df_drugs[['drug_name']].values, dtype = torch.float).to(device)
             data['Admission', 'has_drugs', 'Drugs'].edge_index = torch.tensor(df_drugs[['hadm_id','index_col']].values.tolist(), dtype=torch.long).t().contiguous().to(device)
             data['Admission', 'has_drugs', 'Drugs'].edge_attr  = torch.tensor(df_drugs[['dosage_val']].values, dtype=torch.long).t().contiguous().to(device)
+            #df_diagnosis.iloc[:,4:].drop('index_col',axis=1).values
+            data['Diagnosis'].x = torch.tensor(df_diagnosis_features.values,dtype = torch.float).to(device)
+            data['Admission', 'has_diagnosis', 'Diagnosis'].edge_index = torch.tensor(df_diagnosis[['hadm_id','index_col']].values.tolist(), dtype=torch.long).t().contiguous().to(device)
             
 
-            
-
-            
-        
             data.num_node_features = 3
             data.num_classes = len(df_labs['label'].unique())
             data = T.ToUndirected()(data.to(device))
@@ -366,29 +386,29 @@ def main():
             #     input_nodes=('Admission', data['Admission'].train_mask),
             # )
             # batch = next(iter(train_loader))  
-        else: 
-            if data:
-                model = GAT(hidden_channels=8, heads=8)
-                print(model)
-                model = to_hetero(model, data.metadata(), aggr=aggr).to(device)
-                optimizer = torch.optim.Adam(model.parameters(), lr=5e-5, weight_decay=5e-4)
-                criterion = torch.nn.CrossEntropyLoss(weight=torch.tensor([0.19, 0.81])).to(device)  #
-                # criterion =  FocalLoss(mode="binary", alpha=0.25, gamma=2)
-                for epoch in range(1, 1000):
-                    loss = train(model,optimizer,criterion,data)
-                    train_acc,pred_train = test(model,optimizer,criterion,data['Admission'].train_mask,data)
-                    val_acc,pred_val = test(model,optimizer,criterion,data['Admission'].val_mask,data)
-                    test_acc,pred_test = test(model,optimizer,criterion,data['Admission'].test_mask,data)
-                    print(f'Epoch: {epoch:03d}, Loss: {loss:.4f}, Train: {train_acc:.4f}, Val: {val_acc:.4f}, Test: {test_acc:.4f}')
-                
-                mask_train = data['Admission'].train_mask
-                cf_matrix = confusion_matrix(data['Admission'].cpu().y[mask_train], pred_train[mask_train].cpu())
-                print("train cfm: ",cf_matrix)
+        
+        if data:
+            model = GAT(hidden_channels=8, heads=8)
+            print(model)
+            model = to_hetero(model, data.metadata(), aggr=aggr).to(device)
+            optimizer = torch.optim.Adam(model.parameters(), lr=5e-5, weight_decay=5e-4)
+            criterion = torch.nn.CrossEntropyLoss(weight=torch.tensor([0.20, 0.80])).to(device)  #
+            # criterion =  FocalLoss(mode="binary", alpha=0.25, gamma=2)
+            for epoch in range(1, 1000):
+                loss = train(model,optimizer,criterion,data)
+                train_acc,pred_train = test(model,optimizer,criterion,data['Admission'].train_mask,data)
+                val_acc,pred_val = test(model,optimizer,criterion,data['Admission'].val_mask,data)
+                test_acc,pred_test = test(model,optimizer,criterion,data['Admission'].test_mask,data)
+                print(f'Epoch: {epoch:03d}, Loss: {loss:.4f}, Train: {train_acc:.4f}, Val: {val_acc:.4f}, Test: {test_acc:.4f}')
+            
+            mask_train = data['Admission'].train_mask
+            cf_matrix = confusion_matrix(data['Admission'].cpu().y[mask_train], pred_train[mask_train].cpu())
+            print("train cfm: ",cf_matrix)
 
 
-                mask_test = data['Admission'].test_mask
-                cf_matrix = confusion_matrix(data['Admission'].cpu().y[mask_test], pred_test[mask_test].cpu())
-                print("test cfm: ",cf_matrix)
+            mask_test = data['Admission'].test_mask
+            cf_matrix = confusion_matrix(data['Admission'].cpu().y[mask_test], pred_test[mask_test].cpu())
+            print("test cfm: ",cf_matrix)
             
     
         
