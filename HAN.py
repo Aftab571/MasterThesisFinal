@@ -30,14 +30,14 @@ class HAN(nn.Module):
         return out
 
 
-model = HAN(in_channels=-1, out_channels=3)
+model = HAN(in_channels=-1, out_channels=2)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 data, model = data.to(device), model.to(device)
 
 with torch.no_grad():  # Initialize lazy modules.
     out = model(data.x_dict, data.edge_index_dict)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.0005, weight_decay=0.001)
 
 
 def train() -> float:
@@ -45,7 +45,7 @@ def train() -> float:
     optimizer.zero_grad()
     out = model(data.x_dict, data.edge_index_dict)
     mask = data['Admission'].train_mask
-    loss = F.cross_entropy(out[mask], data['Admission'].y[mask])
+    loss = F.cross_entropy(out[mask], data['Admission'].y[mask],weight=torch.tensor([0.22, 0.78]).to(device))  #,weight=torch.tensor([0.20, 0.80]).to(device)
     loss.backward()
     optimizer.step()
     return float(loss)
@@ -61,7 +61,7 @@ def test(epoch) -> List[float]:
         mask = data['Admission'][split]
         acc = (pred[mask] == data['Admission'].y[mask]).sum() / mask.sum()
         accs.append(float(acc))
-        if epoch == 200:
+        if epoch%50==0:
             confmat = ConfusionMatrix(num_classes=2)
             print(split,confmat(pred[mask].cpu(), data['Admission'].y[mask].cpu()))
     return accs
