@@ -1,0 +1,28 @@
+[51274, 50882, 50911, 51476, 51514, 51516, 51492, 51484, 51002, 51479, 51501]
+
+# queries:
+Match (n:Admissions)-[r:HAS_LAB_EVENTS]-(m:D_Lab_Items) where m.itemid in [51274, 50882, 50911, 51476, 51514, 51516, 51492, 51484, 51002, 51479, 51501] return distinct m.label, m.itemid
+
+Match (n:Admissions)-[r:HAS_LAB_EVENTS]-(m:D_Lab_Items) where m.itemid=51479 return distinct r.value order by r.value desc
+
+Match (n:Admissions)-[r:HAS_LAB_EVENTS]-(m:D_Lab_Items) where m.itemid=51476 and r.value contains "0-2,TRANS" return n,r,m
+
+Match (n:Admissions)-[r:HAS_LAB_EVENTS]-(m:D_Lab_Items) where r.value contains "0-2,TRANS" return n,r,m
+
+Preprocess:
+
+50882 : Bicarbonate -- remove non numeric values as these are not convertable
+
+50911 : Creatine Kinase, MB Isoenzyme .#-- remove non numeric values as these are not convertable
+
+51002 : Troponin -- Handled using np.where
+
+51274 : PT -- remove hemolyzed and specimen lipemic
+ Generally,
+samples with haemolysis, icterus and lipaemia are rejected in different laboratories which delays
+medical care and cause discomfort to patients.  --- https://academicjournals.org/journal/JCIIR/article-full-text-pdf/D3D7A9062956
+
+51476 : Epithelial Cells -- np.where used to rectify incorrect info
+
+51479 : Granular Casts --
+
