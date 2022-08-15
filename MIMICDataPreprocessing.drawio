@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-08-15T12:08:40.356Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36" etag="hGpY4pDe13RwlO8BaWsO" version="20.2.3" type="github">
+<mxfile host="app.diagrams.net" modified="2022-08-15T12:26:27.661Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36" etag="bRN1GBQt__SmUjtzGaYp" version="20.2.3" type="github">
   <diagram id="BUonVHQFYdTOmrVx8Azr" name="Page-1">
     <mxGraphModel dx="1022" dy="460" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -10,8 +10,33 @@
         <mxCell id="HxUZXKI_hmSF7GH5_cT5-1" value="Admissions Diagnosed with&amp;nbsp;&lt;br&gt;&quot;Sepsis&quot;, &quot;Severe Sepsis&quot;, &quot;Septic Shock&quot;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="300" y="30" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HxUZXKI_hmSF7GH5_cT5-2" value="" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="HxUZXKI_hmSF7GH5_cT5-2" target="HxUZXKI_hmSF7GH5_cT5-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-11" value="Demographic Data" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HxUZXKI_hmSF7GH5_cT5-10">
+          <mxGeometry x="-0.0598" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="HxUZXKI_hmSF7GH5_cT5-2" target="HxUZXKI_hmSF7GH5_cT5-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-14" value="&amp;nbsp; Labs&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HxUZXKI_hmSF7GH5_cT5-13">
+          <mxGeometry x="-0.0872" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-2" value="Considered only the Admissions between the ages of 18-100 years (exclluding)" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
           <mxGeometry x="330" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-4" value="Removed all Labs with NaN values" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;position2=0;" vertex="1" parent="1">
+          <mxGeometry x="510" y="70" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-9" value="Mapped Empty values:&lt;br&gt;Marital Status :&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;&#39;UNKNOWN&amp;nbsp;(DEFAULT)&#39;&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Religion :&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;&#39;UNOBTAINABLE&#39;&lt;/span&gt;" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="290" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HxUZXKI_hmSF7GH5_cT5-12" value="Removed All Labs conatining:&lt;br&gt;1.&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;ERROR&lt;/span&gt;&lt;br&gt;2.&amp;nbsp;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;DISREGARD&lt;/span&gt;&lt;br&gt;3.&lt;font face=&quot;Consolas, Courier New, monospace&quot; color=&quot;#ce9178&quot;&gt;&lt;span style=&quot;font-size: 14px; background-color: rgb(30, 30, 30);&quot;&gt;Not Read&lt;/span&gt;&lt;/font&gt;&lt;pre&gt;4.&amp;nbsp;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;specimen&amp;nbsp;lipemic&lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;5. &lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;SPEC.CLOTTED&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: rgb(30, 30, 30); color: rgb(206, 145, 120); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;6.&lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;HEMOLYZED,&amp;nbsp;SLIGHTLY&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: rgb(30, 30, 30); color: rgb(206, 145, 120); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;7.&lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;ICTERIC&lt;br&gt;&lt;/span&gt;&lt;span style=&quot;background-color: rgb(30, 30, 30); color: rgb(206, 145, 120); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;8.&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(30, 30, 30); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;UNNABLE&amp;nbsp;TO&amp;nbsp;QUANTITATE&lt;/span&gt;&lt;span style=&quot;background-color: rgb(30, 30, 30); color: rgb(206, 145, 120); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="290" width="210" height="220" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
